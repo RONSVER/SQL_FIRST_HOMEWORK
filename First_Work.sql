@@ -500,3 +500,199 @@ FROM employees t1
 INNER JOIN employees t2
 ON t1.manager_id = t2.employee_id;
 
+
+-- classwork six
+
+/*
+Task  2(subselect) . print name, surname employees and department name where he works,
+but deparment must be IT, Treasury, IT Support
+*/
+
+SELECT 
+t1.first_name,
+t1.last_name,
+t2.department_name
+FROM employees t1
+INNER JOIN departments t2
+ON t1.department_id = t2.department_id AND t2.department_name IN ('IT', 'Treasury', 'IT Support');
+
+use hr;
+
+select
+t1.first_name,
+t1.last_name
+FROM employees t1
+WHERE t1.department_id IN (SELECT
+department_id
+FROM departments
+WHERE department_name IN ('IT', 'Treasury', 'IT Support'));
+
+
+SELECT
+department_id
+FROM departments
+WHERE department_name IN ('IT', 'Treasury', 'IT Support');
+
+
+select * 
+FROM departments;
+
+select *
+from locations;
+
+
+select
+t1.department_name,
+t1.department_id,
+t2.employee_id
+FROM departments t1
+LEFT JOIN employees t2
+ON t1.department_id = t2.department_id
+WHERE t2.employee_id is null;
+
+SELECT 
+department_name
+FROM departments
+WHERE department_id NOT IN (
+SELECT DISTINCT department_id
+FROM employees
+WHERE department_id IS NOT NULL);
+
+/*
+Task 2. Print name, surname, salary for employees who works in cities 'Oxford', 'San Francisco'
+*/
+
+SELECT 
+first_name,
+last_name,
+salary
+FROM employees
+WHERE employees IN (
+SELECT 
+city
+FROM locations WHERE city IN ('South San Francisco', 'Oxford Science Park')
+);
+
+
+SELECT 
+t1.first_name,
+t1.last_name,
+t1.salary,
+t3.city
+FROM employees t1
+INNER JOIN departments t2
+ON t1.department_id = t2.department_id
+INNER JOIN locations t3
+ON t3.location_id = t2.location_id
+WHERE t3.city IN ('Oxford','South San Francisco');
+
+
+SELECT 
+t1.first_name, t1.last_name, t1.salary
+FROM employees t1
+WHERE t1.department_id IN (
+    SELECT department_id FROM departments 
+                WHERE location_id IN (
+      SELECT location_id FROM locations 
+      WHERE city IN ('Oxford','South San Francisco')));
+
+
+USE shop;
+
+select *
+from sellers;
+
+SELECT 
+t1.SNAME,
+t2.SNAME BOSS_NAME
+FROM sellers t1
+INNER JOIN sellers t2
+ON t1.BOSS_ID = t2.SELL_ID;
+
+
+USE hr;
+
+CREATE TABLE stuff (
+id INT PRIMARY KEY AUTO_INCREMENT, 
+name VARCHAR(200),
+surname VARCHAR(200),
+age INT,
+position VARCHAR(200)
+);
+
+INSERT INTO stuff (name, surname, age, position)
+VALUES('Anna', 'Ivanova', 28, 'worker'),
+('Peter', 'Smith', 35, 'administration'),
+('Maria', 'Johnson', 42, 'security'),
+('Alex', 'Brown', 30, 'worker'),
+('John', 'Doe', 39, 'administration'),
+('Elena', 'Petrova', 45, 'security'),
+('Michael', 'Davis', 33, 'worker'),
+('Olga', 'Sidorova', 37, 'administration');
+
+ALTER TABLE stuff ADD salary INT; 
+
+UPDATE stuff
+SET salary = 
+    CASE 
+        WHEN position = 'worker' THEN 1000
+        WHEN position = 'administration' THEN 5000
+        WHEN position = 'security' THEN 2000
+        ELSE 0
+    END
+    
+    WHERE id > 0;
+    
+    ---------------------
+    
+    UPDATE stuff
+SET salary = 
+    CASE 
+        WHEN position = 'worker' THEN 1000 * 2
+        WHEN position = 'administration' THEN 5000 * 2
+        WHEN position = 'security' THEN 2000 * 2
+        ELSE 0
+    END
+    
+    WHERE id > 0;
+    
+    -- Удалите из таблицы сотрудников, чей возраст больше чем 45.
+--  DELETE FROM staff
+-- 	WHERE age > 45;
+
+    CREATE VIEW worker_view AS
+	SELECT *
+	FROM stuff
+    WHERE position = "worker";
+    
+    CREATE VIEW security_view AS
+    SELECT * 
+    FROM stuff
+    WHERE position = 'security';
+    
+    CREATE VIEW administration_view AS
+    SELECT *
+    FROM stuff
+    WHERE position = 'administration';
+    
+    
+    select *
+    from administration_view;
+    
+    CREATE TABLE admin_employees AS
+    SELECT 
+    name, 
+    surname,
+    position
+    FROM stuff
+    WHERE position = "administration";
+    
+    ALTER TABLE admin_employees
+    DROP COLUMN position;
+    
+    select * 
+    from admin_employees;
+
+
+
+
