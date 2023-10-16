@@ -692,7 +692,31 @@ SET salary =
     
     select * 
     from admin_employees;
+    
+    use hr;
+    
+    
+    select *
+    from employees;
+    
+   
+    
+SELECT t1.job_id, t1.salary, t2.manager_id, t2.salary AS manager_salary 
+FROM employees t1
+JOIN employees t2 ON t1.manager_id = t2.employee_id
+WHERE t1.salary > t2.salary;
 
+SELECT t1.first_name, t1.last_name, t3.city
+FROM employees t1
+JOIN departments t2 ON t1.department_id = t2.department_id
+JOIN locations t3 ON t2.location_id = t3.location_id
+WHERE t3.city IN ('Seattle', 'Toronto');
+
+
+SELECT t2.first_name, t2.last_name, t1.department_name, t3.job_title
+FROM departments t1
+JOIN  employees t2 ON t1.department_id = t2.department_id
+JOIN jobs t3 ON t2.job_id = t3.job_id;
 
 
 
