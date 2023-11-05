@@ -719,4 +719,659 @@ JOIN  employees t2 ON t1.department_id = t2.department_id
 JOIN jobs t3 ON t2.job_id = t3.job_id;
 
 
+-- classwork seven
+
+-- Date 20.10.2023
+-- Time 19:06
+-- Year 2023
+-- DateTime date+time
+-- Timestamp 
+
+use shop;
+
+SELECT curdate(); -- only date
+
+SELECT now(); -- date + time when run script
+
+SELECT sysdate(); -- date + time function run
+
+-- convert string to date 
+
+SELECT str_to_date("2023-10-20 19:20:55", "%Y-%m-%d %H:%i:%s");
+
+SELECT str_to_date("2023-10-20 19:20:55", "%Y-%m-%d");
+
+SELECT str_to_date("20-10-23 19:20:55", "%d-%m-%Y");
+
+-- extract data from date
+
+SELECT extract(hour from "2023-10-20 19:20:55"); 
+
+SELECT extract(year from "2023-10-20 19:20:55");
+
+SELECT extract(month from "2023-10-20 19:20:55");  
+
+SELECT date_add("2023-10-20 19:20:55", interval 5 day);
+
+SELECT date_add("2023-10-20 19:20:55", interval -5 day);
+
+SELECT date_add("2023-10-20 19:20:55", interval -5 month);
+
+SELECT datediff('2023-10-20', '2023-10-30');
+
+SELECT *
+FROM orders
+WHERE month(ODATE) = 3;
+
+SELECT *
+FROM orders 
+WHERE ODATE between '2022-04-10' and '2022-05-10';
+
+SELECT COUNT(*)
+FROM orders
+WHERE month(ODATE) = 6;
+
+
+SELECT AVG(AMT)
+FROM orders
+WHERE month(ODATE) = 3;
+
+
+SELECT *
+FROM orders
+WHERE WEEKDAY(ODATE) = 1;
+
+
+
+CREATE database uni;
+
+use uni;
+
+create table Students(
+  id integer primary key auto_increment,
+    name varchar(128) not null,
+    age integer
+);
+
+create table Teachers(
+  id integer primary key auto_increment,
+    name varchar(128) not null,
+    age integer
+);
+
+create table Competencies(
+  id integer primary key auto_increment,
+    title varchar(128) not null
+);
+
+create table Teachers2Competencies(
+  id integer primary key auto_increment,
+    teacher_id integer,
+    competencies_id integer
+);
+
+create table Courses(
+  id integer primary key auto_increment,
+    teacher_id integer,
+    title varchar(128) not null,
+    headman_id integer
+);
+
+create table Students2Courses(
+  id integer primary key auto_increment,
+    student_id integer,
+    course_id integer
+);
+
+insert into students (name, age) values ('Анатолий', 29);
+insert into students (name, age) values ('Олег', 25);
+insert into students (name, age) values ('Семен', 27);
+insert into students (name, age) values ('Олеся', 28);
+insert into students (name, age) values ('Ольга', 31);
+insert into students (name, age) values ('Иван', 22);
+
+insert into teachers (name, age) values ('Петр', 39);
+insert into teachers (name, age) values ('Максим', 35);
+insert into teachers (name, age) values ('Антон', 37);
+insert into teachers (name, age) values ('Всеволод', 38);
+insert into teachers (name, age) values ('Егор', 41);
+insert into teachers (name, age) values ('Светлана', 32);
+
+insert into Competencies (title) values ('Математика');
+insert into Competencies (title) values ('Информатика');
+insert into Competencies (title) values ('Программирование');
+insert into Competencies (title) values ('Графика');
+
+insert into Teachers2Competencies (teacher_id, competencies_id) values (1, 1);
+insert into Teachers2Competencies (teacher_id, competencies_id) values (2, 1);
+insert into Teachers2Competencies (teacher_id, competencies_id) values (2, 3);
+insert into Teachers2Competencies (teacher_id, competencies_id) values (3, 2);
+insert into Teachers2Competencies (teacher_id, competencies_id) values (4, 1);
+insert into Teachers2Competencies (teacher_id, competencies_id) values (5, 3);
+
+insert into courses (teacher_id, title, headman_id) values (1, 'Алгебра логики', 2);
+insert into courses (teacher_id, title, headman_id) values (2, 'Математическая статистика', 3);
+insert into courses (teacher_id, title, headman_id) values (4, 'Высшая математика', 5);
+insert into courses (teacher_id, title, headman_id) values (5, 'Javascript', 1);
+insert into courses (teacher_id, title, headman_id) values (5, 'Базовый Python', 1);
+
+insert into students2courses (student_id, course_id) values (1, 1);
+insert into students2courses (student_id, course_id) values (2, 1);
+insert into students2courses (student_id, course_id) values (3, 2);
+insert into students2courses (student_id, course_id) values (3, 3);
+insert into students2courses (student_id, course_id) values (4, 5);
+
+SELECT *
+FROM students;
+
+SELECT *
+FROM teachers;
+
+SELECT *
+FROM courses;
+
+SELECT *
+FROM competencies;
+
+
+SELECT *
+FROM students2courses;
+
+SELECT *
+FROM teachers2competencies;
+
+SELECT 
+t1.name, 
+t3.title
+FROM students t1
+INNER JOIN students2courses t2
+ON t1.id = t2.student_id
+INNER JOIN courses t3
+ON t3.id = t2.course_id;
+
+SELECT
+t1.name,
+t3.title
+FROM teachers t1
+LEFT JOIN teachers2competencies t2
+ON t1.id = t2.teacher_id
+LEFT JOIN competencies t3
+ON t2.competencies_id = t3.id;
+
+
+
+SELECT
+t1.name
+FROM teachers t1
+LEFT JOIN teachers2competencies t2
+ON t1.id = t2.teacher_id
+WHERE t2.competencies_id IS NULL;
+
+/*
+4. print student name without any courses
+*/
+SELECT 
+-- t1.*,
+-- t2.*
+t1.name
+FROM students t1
+LEFT JOIN Students2Courses t2
+ON t1.id = t2.student_id
+WHERE t2.course_id IS NULL;
+
+
+SELECT
+t1.title
+FROM Courses t1
+LEFT JOIN Students2Courses t2
+ON t1.id = t2.course_id
+WHERE t2.student_id IS NULL;
+
+
+SELECT
+t1.title
+FROM competencies t1
+LEFT JOIN teachers2competencies t2
+ON t1.id = t2.competencies_id
+WHERE t2.teacher_id IS NULL;
+
+SELECT
+t1.title,
+t2.name
+FROM courses t1
+INNER JOIN students t2
+ON t1.headman_id = t2.id;
+
+
+-- classwork 8
+
+-- count(colone_name)  count not null values
+
+-- count(*) all lines in result table
+
+
+--   max(colone_name) max value in this column
+--   min(colone_name) min value in this column
+
+-- abg(colone_name) average value in this column
+--  sum(colone_name) sum value in this column 
+
+use hr;
+
+SELECT *
+FROM employees;
+
+SELECT 
+max(salary) as salary_max,
+min(salary) as salary_min,
+avg(salary) as avg_min,
+sum(salary) as sum_min,
+count(salary) as count_employees
+FROM employees;
+
+SELECT 
+count(commission_pct) as commission_count,
+count(*) as count_employees
+FROM employees;
+
+-- print count employees without manager
+
+SELECT 
+COUNT(*) AS count_employees_whithout_managers
+FROM employees
+WHERE manager_id IS NULL; 
+
+SELECT
+COUNT(manager_id) AS count_employees_whithout_managers,
+COUNT(*)
+FROM employees;
+
+-- print name and surname employee(s) with max salary 
+SELECT 
+first_name as name,
+last_name as surname,
+salary as employ_salary
+from employees
+WHERE salary = (
+SELECT
+MAX(salary) as max_salary
+FROM employees);
+
+-- task one max salary
+
+
+SELECT
+MAX(salary) as max_salary
+FROM employees;
+
+
+-- task two - print employees count 
+
+SELECT
+
+COUNT(*)
+FROM employees;
+
+-- task three print name and surname employee(s) with max salary 
+SELECT 
+first_name as name,
+last_name as surname,
+salary as employ_salary
+from employees
+WHERE salary = (
+SELECT
+MAX(salary) as max_salary
+FROM employees);
+
+
+-- task four - print average salary by company
+
+SELECT
+AVG(salary) as avg_salary
+FROM employees;
+
+
+-- task five - print names surnames and salary from employees who get salary average salary by company
+
+SELECT 
+first_name as name,
+last_name as surname,
+salary
+FROM employees
+WHERE salary < (
+SELECT
+AVG(salary)  avg_salary
+FROM employees
+);
+
+-- task six - print count of departments
+
+SELECT
+COUNT(*) AS departments_count
+FROM departments;
+
+-- task seven - print count of departments without any workers
+
+
+
+
+SELECT
+-- t1.department_name,
+-- t1.department_id,
+-- t2.first_name,
+-- t2.department_id
+COUNT(*)
+FROM departments t1
+LEFT JOIN employees t2
+ON t1.department_id = t2.department_id
+WHERE t2.department_id IS NULL;
+
+SELECT
+COUNT(*) as department_cnt_without_workers
+FROM departments
+WHERE department_id NOT IN ( SELECT department_id FROM employees WHERE department_id IS NOT NULL );
+
+-- tASK EIGHT = print average salary in department with id = 90
+SELECT 
+AVG(salary) AS avg_salary
+FROM employees
+WHERE department_id = 90; 
+
+-- task nine - print max salary in departments with id 70, 80
+
+
+SELECT 
+MAX(salary) AS max_salary
+FROM employees
+WHERE department_id IN (70, 80); 
+
+-- task ten - print count employees from departments with id 100 who earn more than 5000 
+
+SELECT 
+COUNT(salary) 
+FROM employees 
+WHERE department_id = 100 
+AND salary > 5000;
+
+/*
+Task eleven - print count of employees from department with id 60 who earn more than average salary by company
+*/
+
+SELECT
+COUNT(*)
+FROM employees
+WHERE department_id = 60 and salary > (
+SELECT
+AVG(salary) as average_salary
+FROM employees
+);
+
+-- grouping
+
+-- Task one
+
+SELECT 
+department_id,
+COUNT(*) employees_cnt
+FROM employees
+GROUP BY department_id;
+
+use shop;
+
+SELECT *
+FROM ORDERS;
+
+-- task two 
+
+SELECT
+CUST_ID,
+COUNT(*) orders_cnt
+FROM ORDERS
+GROUP BY CUST_ID; 
+
+
+SELECT
+t1.CNAME,
+t1.CUST_ID,
+t2.orders_cnt
+FROM CUSTOMERS t1
+INNER JOIN (
+	SELECT
+	CUST_ID,
+	COUNT(*) orders_cnt
+	FROM ORDERS
+	GROUP BY CUST_ID
+) t2
+
+ON t1.CUST_ID = t2.CUST_ID;
+
+-- classwork nine
+
+use hr;
+
+-- Task one - print count of employees for each manager
+
+SELECT manager_id, COUNT(*) as employee_count
+FROM employees
+GROUP BY manager_id;
+
+-- Task two - print department name, count of employees for each department
+
+SELECT
+t1.department_name,
+COUNT(t2.employee_id) as employee_cnt
+FROM departments t1
+LEFT JOIN employees t2
+ON t1.department_id = t2.department_id
+GROUP BY t1.department_name;
+
+
+SELECT t1.department_name, 
+COUNT(*) AS employee_count
+FROM departments t1
+INNER JOIN employees t2 
+ON t1.department_id = t2.department_id
+GROUP BY t1.department_id, t1.department_name;
+
+-- Task three - print max salary in each department, department_id ,max salary
+SELECT 
+department_id, 
+MAX(salary) as max_salary
+FROM employees
+GROUP BY department_id;
+
+SELECT
+t1.department_id,
+t1.department_name,
+MAX(t2.salary) as max_salary
+FROM departments t1
+INNER JOIN employees t2
+ON t1.department_id = t2.department_id
+GROUP BY t1.department_id, t1.department_name;
+
+-- Task four - print manager name, surname and count of employees for each manager
+
+SELECT
+#t1.employee_id,
+#t2.employee_id as manager_id,
+t2.first_name,
+t2.last_name,
+#COUNT(t1.employee_id) as employees_cnt
+COUNT(*) as employees_cnt
+FROM employees t1
+INNER JOIN employees t2
+ON t1.manager_id = t2.employee_id
+GROUP BY t2.first_name, t2.last_name;
+
+-- task five 
+SELECT 
+department_id, 
+MAX(salary) as max_salary
+FROM employees
+GROUP BY department_id;
+
+SELECT
+t1.last_name,
+t1.first_name,
+t2.department_id,
+t2.max_salary
+FROM employees t1
+INNER JOIN (
+SELECT 
+department_id, 
+MAX(salary) as max_salary
+FROM employees
+GROUP BY department_id
+) t2
+ON t1.salary = t2.max_salary AND t1.department_id = t2.department_id;
+
+
+
+-- HAVING
+
+SELECT 
+department_id, 
+MAX(salary) as max_salary
+FROM employees
+GROUP BY department_id
+HAVING MAX(salary) > 10000;
+
+
+SELECT
+department_id,
+MAX(salary) as max_salary
+FROM employees
+WHERE department_id > 50
+GROUP BY department_id
+HAVING MAX(salary) > 13000
+ORDER BY department_id;
+
+SELECT
+manager_id,
+COUNT(*) as employees_cnt
+FROM employees
+GROUP BY manager_id
+HAVING COUNT(*) > 5;
+
+-- TASK SIX
+
+SELECT
+department_id,
+COUNT(*)
+FROM employees
+GROUP BY department_id
+HAVING COUNT(*) > 10; 
+
+SELECT
+t1.department_name,
+t1.department_id
+FROM departments t1
+INNER JOIN (SELECT
+department_id,
+COUNT(*)
+FROM employees
+GROUP BY department_id
+HAVING COUNT(*) > 10 ) t2
+ON t1.department_id = t2.department_id;
+
+--
+
+SELECT
+department_name
+FROM departments
+WHERE department_id IN (
+   SELECT
+   department_id
+   FROM employees
+   GROUP BY department_id
+   HAVING COUNT(*) > 10
+);
+
+-- task seven
+
+
+SELECT
+AVG(employ_cnt)
+FROM(
+SELECT
+department_id,
+COUNT(*) AS employ_cnt
+FROM employees
+GROUP BY department_id) t1;
+
+
+
+SELECT
+department_id,
+COUNT(*) AS employ_cnt
+FROM employees
+GROUP BY department_id
+HAVING COUNT(*) > (
+SELECT
+AVG(employ_cnt)
+FROM(
+SELECT
+department_id,
+COUNT(*) AS employ_cnt
+FROM employees
+GROUP BY department_id) t1
+);
+
+/*
+Task seven - print department name where count of employee more than average
+*/
+
+SELECT 
+department_name 
+FROM departments
+WHERE
+department_id IN (
+     SELECT
+     department_id
+     #COUNT(*) as employee_cnt
+     FROM employees
+     GROUP BY department_id
+     HAVING COUNT(*) > (
+          SELECT
+          AVG(employees_cnt)
+          FROM(
+           SELECT
+           department_id,
+           COUNT(*) as employees_cnt
+           FROM employees
+           GROUP BY department_id) t1)
+           );
+           
+-- HomeWork
+
+use shop; 
+
+SELECT
+t1.CNAME,
+t2.AMT
+FROM customers t1
+INNER JOIN orders t2
+ON t1.CUST_ID = t2.CUST_ID
+WHERE t2.AMT > 1000;
+
+use hr;
+
+SELECT
+t1.last_name AS sname,
+(t1.commission_pct - t1.commission_pct) AS difference 
+FROM employees t1
+LEFT JOIN employees t2
+ON t1.manager_id = t2.employee_id;
+
+use shop;
+
+SELECT s.SNAME, c.CNAME, c.CITY 
+FROM sellers s 
+JOIN customers c ON s.CITY = c.CITY;
+
+
+
+
+
+
 
