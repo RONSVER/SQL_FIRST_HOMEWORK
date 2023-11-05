@@ -1369,6 +1369,54 @@ SELECT s.SNAME, c.CNAME, c.CITY
 FROM sellers s 
 JOIN customers c ON s.CITY = c.CITY;
 
+--   1 уровень сложности: 1.Используем БД uni (скрипт создания представлен на уроке)
+
+use uni;
+
+SELECT
+t1.name AS name_students,
+t2.name AS name_teachers,
+t3.title AS name_coursers
+FROM students t1
+INNER JOIN teachers t2
+ON t1.id = t2.id
+INNER JOIN courses t3
+ON t2.id = t3.id;
+
+-- 2.Используем БД shop :
+-- Выведите имена покупателей, которые сделали заказ.
+-- Предусмотрите в выборке также имена продавцов.
+-- Примечание: покупатели и продавцы должны быть из разных городов.
+-- В выборке должно присутствовать два атрибута — cname, sname.
+
+USE shop;
+
+SELECT 
+    t1.CNAME AS CustomerName,
+    t3.SNAME AS SellerName,
+    t1.CITY AS CustomerCity,
+    t3.CITY AS SellerCity
+FROM 
+    customers t1
+JOIN 
+    orders t2 ON t1.CUST_ID = t2.CUST_ID
+JOIN 
+    sellers t3 ON t2.SELL_ID = t3.SELL_ID
+WHERE 
+    t1.CITY <> t3.CITY;
+
+-- 3..Используем БД shop :
+-- Вывести имена покупателей которые ничего никогда не покупали.
+-- Решить задачу двумя способами : через join и через подзапрос 
+
+SELECT 
+    t1.CNAME
+FROM 
+    customers t1
+LEFT JOIN 
+    orders t2 ON t1.CUST_ID = t2.CUST_ID
+WHERE 
+    t2.CUST_ID IS NULL;
 
 
 
