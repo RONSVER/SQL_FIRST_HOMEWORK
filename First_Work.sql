@@ -1417,8 +1417,57 @@ LEFT JOIN
     orders t2 ON t1.CUST_ID = t2.CUST_ID
 WHERE 
     t2.CUST_ID IS NULL;
+    
+    -- Найти сотрудников(вывести информацию о них - имя, фамилию),
+    -- у которых наибольшая зарплата в их конкретном департаменте
+    
+    USE hr;
+    
+    SELECT 
+    t1.first_name AS name,
+    t1.last_name AS surname,
+    t2.max_salary
+    FROM employees t1
+    INNER JOIN (
+		SELECT
+		department_id,
+		MAX(salary) AS max_salary
+		FROM employees
+		GROUP BY department_id
+    ) t2
+    ON t1.department_id = t2.department_id
+    AND t1.salary = t2.max_salary;
+    
+ 
 
+	SELECT
+    department_id,
+    MAX(salary) AS max_salary
+    FROM employees
+    GROUP BY department_id;
+    
+	-- Используйте базу данных hr;
+-- Найти департамент с наибольшим количеством сотрудников
+-- (вывести название департамента и ид департамента) 
 
+SELECT 
+department_id
+FROM employees
+GROUP BY department_id
+ORDER BY COUNT(*) DESC;
+
+SELECT
+department_name,
+department_id
+FROM departments
+WHERE department_id = (
+	SELECT 
+	department_id
+	FROM employees
+	GROUP BY department_id
+	ORDER BY COUNT(*) DESC
+    LIMIT 1
+);
 
 
 
